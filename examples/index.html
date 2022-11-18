@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
   <head>
-
     <meta charset="utf-8" />
 
     <meta
@@ -15,12 +13,17 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
+    <title>Calendar Feed</title>
   </head>
 
   <style>
     * {
       margin: 0;
       padding: 0;
+    }
+
+    main {
+      padding: 10vw;
     }
 
     p {
@@ -44,13 +47,16 @@
     }
   </style>
 
-  <body>
+  <!-- Clarice = 92357 Health and wellness = 10404 -->
 
-    <main> </main>
+  <body>
+    <main>
+      <umd-calendar-feed
+        token="ty5hts_R6EWaNT8zBYqVT8edynE0f9cK"
+        categories="10404,92357"
+      ></umd-calendar-feed>
+    </main>
 
     <script src="index.js" type="module" defer></script>
-
   </body>
-
 </html>
-
