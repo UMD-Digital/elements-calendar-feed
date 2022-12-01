@@ -42,25 +42,25 @@ const EventsQuery = `
   }
 `;
 const Colors = {
-    white: '#fff',
-    offWhite: '#f1f1f1',
-    grayLight: '#e6e6e6',
-    gray: '#222',
-    grayDark: '#454545',
-    red: '#e21833',
-    redDark: '#951022',
-    yellow: '#FFD200',
-    green: '#70ebd6',
+  white: '#fff',
+  offWhite: '#f1f1f1',
+  grayLight: '#e6e6e6',
+  gray: '#222',
+  grayDark: '#454545',
+  red: '#e21833',
+  redDark: '#951022',
+  yellow: '#FFD200',
+  green: '#70ebd6',
 };
 const Breakpoints = {
-    largeMobileMax: 767,
-    tabletMin: 768,
-    tabletMax: 1023,
-    desktopMin: 1024,
+  largeMobileMax: 767,
+  tabletMin: 768,
+  tabletMax: 1023,
+  desktopMin: 1024,
 };
 const ELEMENT_NAME = 'umd-calendar-feed';
 const template = document.createElement('template');
-const CALENDAR_PRODUCTION_URL = 'https://calendar.umd-staging.com/';
+const CALENDAR_PRODUCTION_URL = 'https://calendar.umd.edu/';
 const CONTAINER_CLASS = 'umd-calendar-feed-container';
 const LOADER_CLASS = 'umd-calendar-loader';
 const NO_RESULTS_CLASS = 'umd-calendar-no-results';
@@ -317,219 +317,218 @@ template.innerHTML = `
   </style>
 `;
 const MakeContainer = () => {
-    const container = document.createElement('div');
-    container.classList.add(CONTAINER_CLASS);
-    return container;
+  const container = document.createElement('div');
+  container.classList.add(CONTAINER_CLASS);
+  return container;
 };
 const MakeLoader = () => {
-    const container = document.createElement('div');
-    const wrapper = document.createElement('div');
-    const first = document.createElement('div');
-    const middle = document.createElement('div');
-    const last = document.createElement('div');
-    container.classList.add(LOADER_CLASS);
-    wrapper.appendChild(first);
-    wrapper.appendChild(middle);
-    wrapper.appendChild(last);
-    container.appendChild(wrapper);
-    return container;
+  const container = document.createElement('div');
+  const wrapper = document.createElement('div');
+  const first = document.createElement('div');
+  const middle = document.createElement('div');
+  const last = document.createElement('div');
+  container.classList.add(LOADER_CLASS);
+  wrapper.appendChild(first);
+  wrapper.appendChild(middle);
+  wrapper.appendChild(last);
+  container.appendChild(wrapper);
+  return container;
 };
 const MakeNoResults = () => {
-    const container = document.createElement('div');
-    const text = document.createElement('p');
-    container.classList.add(NO_RESULTS_CLASS);
-    text.innerHTML = 'There are no events at this time.';
-    container.appendChild(text);
-    return container;
+  const container = document.createElement('div');
+  const text = document.createElement('p');
+  container.classList.add(NO_RESULTS_CLASS);
+  text.innerHTML = 'There are no events at this time.';
+  container.appendChild(text);
+  return container;
 };
 const MakeContentContainer = ({ eventAmount }) => {
-    const container = document.createElement('div');
-    container.classList.add(CONTAINER_CONTENT_CLASS);
-    container.setAttribute(DATA_CONTAINER_AMOUNT, eventAmount.toString());
-    return container;
+  const container = document.createElement('div');
+  container.classList.add(CONTAINER_CONTENT_CLASS);
+  container.setAttribute(DATA_CONTAINER_AMOUNT, eventAmount.toString());
+  return container;
 };
 const MakeImageContainer = (event) => {
-    const imageContainer = document.createElement('div');
-    const link = document.createElement('a');
-    const image = document.createElement('img');
-    imageContainer.classList.add(EVENT_IMAGE_CONTAINER_CLASS);
-    link.setAttribute('href', event.url);
-    link.setAttribute('rel', 'noopener noreferrer');
-    link.setAttribute('target', '_blank');
-    image.setAttribute('src', `${CALENDAR_PRODUCTION_URL}${event.image[0].url}`);
-    image.setAttribute('alt', event.image[0].altText);
-    console.log(event);
-    link.appendChild(image);
-    imageContainer.appendChild(link);
-    return imageContainer;
+  const imageContainer = document.createElement('div');
+  const link = document.createElement('a');
+  const image = document.createElement('img');
+  imageContainer.classList.add(EVENT_IMAGE_CONTAINER_CLASS);
+  link.setAttribute('href', event.url);
+  link.setAttribute('rel', 'noopener noreferrer');
+  link.setAttribute('target', '_blank');
+  image.setAttribute('src', `${CALENDAR_PRODUCTION_URL}${event.image[0].url}`);
+  image.setAttribute('alt', event.image[0].altText);
+  console.log(event);
+  link.appendChild(image);
+  imageContainer.appendChild(link);
+  return imageContainer;
 };
 const MakeDate = (event) => {
-    const dateWrapper = document.createElement('div');
-    const firstRow = document.createElement('div');
-    const secondRow = document.createElement('div');
-    const startDay = document.createElement('p');
-    const endDay = document.createElement('p');
-    const startTime = document.createElement('time');
-    const endTime = document.createElement('time');
-    const startDate = new Date(event.startDate);
-    const endDate = new Date(event.endDate);
-    const isSameDay = startDate.getDay() === endDate.getDay();
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    dateWrapper.classList.add(EVENT_TEXT_DATE_CLASS);
-    startDate.setTime(startDate.getTime() + 4 * 60 * 60 * 1000);
-    endDate.setTime(endDate.getTime() + 4 * 60 * 60 * 1000);
-    startTime.setAttribute('datetime', startDate.toUTCString());
-    endTime.setAttribute('datetime', endDate.toUTCString());
-    startDay.innerHTML = `${days[startDate.getDay()]} ${startDate.getMonth()}/${startDate.getDate()}`;
-    endDay.innerHTML = `${days[endDate.getDay()]} ${endDate.getMonth()}/${endDate.getDate()}`;
-    startTime.innerHTML = `${startDate.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-    })}`;
-    endTime.innerHTML = ` ${endDate.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-    })}`;
-    if (isSameDay) {
-        firstRow.innerHTML = `${startDay.innerHTML} <span>${startTime.outerHTML} - ${endTime.outerHTML}</span>`;
-        dateWrapper.appendChild(firstRow);
-    }
-    else {
-        firstRow.innerHTML = `${startDay.innerHTML} <span>${startTime.outerHTML}</span>`;
-        secondRow.innerHTML = `${endDay.innerHTML} <span>${endTime.outerHTML}</span>`;
-        dateWrapper.appendChild(firstRow);
-        dateWrapper.appendChild(secondRow);
-    }
-    return dateWrapper;
+  const dateWrapper = document.createElement('div');
+  const firstRow = document.createElement('div');
+  const secondRow = document.createElement('div');
+  const startDay = document.createElement('p');
+  const endDay = document.createElement('p');
+  const startTime = document.createElement('time');
+  const endTime = document.createElement('time');
+  const startDate = new Date(event.startDate);
+  const endDate = new Date(event.endDate);
+  const isSameDay = startDate.getDay() === endDate.getDay();
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  dateWrapper.classList.add(EVENT_TEXT_DATE_CLASS);
+  startDate.setTime(startDate.getTime() + 4 * 60 * 60 * 1000);
+  endDate.setTime(endDate.getTime() + 4 * 60 * 60 * 1000);
+  startTime.setAttribute('datetime', startDate.toUTCString());
+  endTime.setAttribute('datetime', endDate.toUTCString());
+  startDay.innerHTML = `${
+    days[startDate.getDay()]
+  } ${startDate.getMonth()}/${startDate.getDate()}`;
+  endDay.innerHTML = `${
+    days[endDate.getDay()]
+  } ${endDate.getMonth()}/${endDate.getDate()}`;
+  startTime.innerHTML = `${startDate.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  })}`;
+  endTime.innerHTML = ` ${endDate.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  })}`;
+  if (isSameDay) {
+    firstRow.innerHTML = `${startDay.innerHTML} <span>${startTime.outerHTML} - ${endTime.outerHTML}</span>`;
+    dateWrapper.appendChild(firstRow);
+  } else {
+    firstRow.innerHTML = `${startDay.innerHTML} <span>${startTime.outerHTML}</span>`;
+    secondRow.innerHTML = `${endDay.innerHTML} <span>${endTime.outerHTML}</span>`;
+    dateWrapper.appendChild(firstRow);
+    dateWrapper.appendChild(secondRow);
+  }
+  return dateWrapper;
 };
 const MakeTextContainer = (event) => {
-    const parser = new DOMParser();
-    const textContainer = document.createElement('div');
-    const eventTitle = document.createElement('h2');
-    const link = document.createElement('a');
-    const cta = document.createElement('a');
-    const summaryText = parser.parseFromString(event.summary, 'text/html');
-    const date = MakeDate(event);
-    textContainer.classList.add(EVENT_TEXT_CONTAINER_CLASS);
-    eventTitle.classList.add(EVENT_TEXT_TITLE_CLASS);
-    link.setAttribute('href', event.url);
-    link.setAttribute('rel', 'noopener noreferrer');
-    link.setAttribute('target', '_blank');
-    link.textContent = event.title;
-    cta.classList.add(EVENT_CTA_CLASS);
-    cta.setAttribute('href', event.url);
-    cta.setAttribute('rel', 'noopener noreferrer');
-    cta.setAttribute('target', '_blank');
-    cta.setAttribute('aria-label', `View full event details for ${event.title}`);
-    cta.innerHTML = 'Learn More';
-    eventTitle.appendChild(link);
-    textContainer.appendChild(date);
-    textContainer.appendChild(eventTitle);
-    if (event.summary)
-        textContainer.appendChild(summaryText.body);
-    textContainer.appendChild(cta);
-    return textContainer;
+  const parser = new DOMParser();
+  const textContainer = document.createElement('div');
+  const eventTitle = document.createElement('h2');
+  const link = document.createElement('a');
+  const cta = document.createElement('a');
+  const summaryText = parser.parseFromString(event.summary, 'text/html');
+  const date = MakeDate(event);
+  textContainer.classList.add(EVENT_TEXT_CONTAINER_CLASS);
+  eventTitle.classList.add(EVENT_TEXT_TITLE_CLASS);
+  link.setAttribute('href', event.url);
+  link.setAttribute('rel', 'noopener noreferrer');
+  link.setAttribute('target', '_blank');
+  link.textContent = event.title;
+  cta.classList.add(EVENT_CTA_CLASS);
+  cta.setAttribute('href', event.url);
+  cta.setAttribute('rel', 'noopener noreferrer');
+  cta.setAttribute('target', '_blank');
+  cta.setAttribute('aria-label', `View full event details for ${event.title}`);
+  cta.innerHTML = 'Learn More';
+  eventTitle.appendChild(link);
+  textContainer.appendChild(date);
+  textContainer.appendChild(eventTitle);
+  if (event.summary) textContainer.appendChild(summaryText.body);
+  textContainer.appendChild(cta);
+  return textContainer;
 };
 const MakeEvent = (event) => {
-    const eventContainer = document.createElement('div');
-    const image = MakeImageContainer(event);
-    const text = MakeTextContainer(event);
-    eventContainer.classList.add(EVENT_CONTAINER_CLASS);
-    eventContainer.appendChild(image);
-    eventContainer.appendChild(text);
-    return eventContainer;
+  const eventContainer = document.createElement('div');
+  const image = MakeImageContainer(event);
+  const text = MakeTextContainer(event);
+  eventContainer.classList.add(EVENT_CONTAINER_CLASS);
+  eventContainer.appendChild(image);
+  eventContainer.appendChild(text);
+  return eventContainer;
 };
-const fetchEntries = async ({ variables, token, }) => {
-    const response = await fetch(`${CALENDAR_PRODUCTION_URL}/graphql`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            query: EventsQuery,
-            variables,
-        }),
-    });
-    const responseData = await response.json();
-    if (responseData.errors) {
-        responseData.errors.forEach((error) => console.error(error.message));
+const fetchEntries = async ({ variables, token }) => {
+  const response = await fetch(`${CALENDAR_PRODUCTION_URL}/graphql`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      query: EventsQuery,
+      variables,
+    }),
+  });
+  const responseData = await response.json();
+  if (responseData.errors) {
+    responseData.errors.forEach((error) => console.error(error.message));
+  }
+  if (responseData && responseData.data) {
+    const data = responseData.data;
+    if (data.solspace_calendar && data.solspace_calendar.events) {
+      return data.solspace_calendar.events;
+    } else {
+      console.log('Solspace calendar events not found');
     }
-    if (responseData && responseData.data) {
-        const data = responseData.data;
-        if (data.solspace_calendar && data.solspace_calendar.events) {
-            return data.solspace_calendar.events;
-        }
-        else {
-            console.log('Solspace calendar events not found');
-        }
-    }
-    else {
-        console.log('No data found');
-    }
+  } else {
+    console.log('No data found');
+  }
 };
 export default class CalendarFeedElement extends HTMLElement {
-    constructor() {
-        super();
-        this._token = null;
-        this._categories = null;
-        this._shadow = this.attachShadow({ mode: 'open' });
-        this._shadow.appendChild(template.content.cloneNode(true));
+  constructor() {
+    super();
+    this._token = null;
+    this._categories = null;
+    this._shadow = this.attachShadow({ mode: 'open' });
+    this._shadow.appendChild(template.content.cloneNode(true));
+  }
+  static get observedAttributes() {
+    return ['token', 'categories'];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'token' && newValue) {
+      this._token = newValue;
     }
-    static get observedAttributes() {
-        return ['token', 'categories'];
+    if (name === 'categories' && newValue) {
+      this._categories = newValue;
     }
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'token' && newValue) {
-            this._token = newValue;
-        }
-        if (name === 'categories' && newValue) {
-            this._categories = newValue;
-        }
+  }
+  connectedCallback() {
+    if (!this._token || this._token === null) {
+      console.error('No token provided');
+      return;
     }
-    connectedCallback() {
-        if (!this._token || this._token === null) {
-            console.error('No token provided');
-            return;
-        }
-        if (!this._categories || this._categories === null) {
-            console.error('No filters provided for calendar feed');
-        }
-        const addEvents = async () => {
-            const variables = {};
-            if (this._categories) {
-                variables.related = [this._categories];
-            }
-            const container = MakeContainer();
-            const loader = MakeLoader();
-            container.appendChild(loader);
-            this._shadow.appendChild(container);
-            const data = await fetchEntries({
-                variables: variables,
-                token: this._token,
-            });
-            loader.remove();
-            if (data.length === 0) {
-                const contentContainer = MakeNoResults();
-                container.appendChild(contentContainer);
-                console.log('Calendar Feed Element: No Future Events Found');
-            }
-            else {
-                const contentContainer = MakeContentContainer({
-                    eventAmount: data.length,
-                });
-                data.forEach((event) => {
-                    const eventElement = MakeEvent(event);
-                    contentContainer.appendChild(eventElement);
-                });
-                container.appendChild(contentContainer);
-            }
-        };
-        addEvents();
+    if (!this._categories || this._categories === null) {
+      console.error('No filters provided for calendar feed');
     }
+    const addEvents = async () => {
+      const variables = {};
+      if (this._categories) {
+        variables.related = [this._categories];
+      }
+      const container = MakeContainer();
+      const loader = MakeLoader();
+      container.appendChild(loader);
+      this._shadow.appendChild(container);
+      const data = await fetchEntries({
+        variables: variables,
+        token: this._token,
+      });
+      loader.remove();
+      if (data.length === 0) {
+        const contentContainer = MakeNoResults();
+        container.appendChild(contentContainer);
+        console.log('Calendar Feed Element: No Future Events Found');
+      } else {
+        const contentContainer = MakeContentContainer({
+          eventAmount: data.length,
+        });
+        data.forEach((event) => {
+          const eventElement = MakeEvent(event);
+          contentContainer.appendChild(eventElement);
+        });
+        container.appendChild(contentContainer);
+      }
+    };
+    addEvents();
+  }
 }
 if (!window.customElements.get(ELEMENT_NAME)) {
-    window.CalendarFeedElement = CalendarFeedElement;
-    window.customElements.define(ELEMENT_NAME, CalendarFeedElement);
+  window.CalendarFeedElement = CalendarFeedElement;
+  window.customElements.define(ELEMENT_NAME, CalendarFeedElement);
 }
 //# sourceMappingURL=index.js.map
