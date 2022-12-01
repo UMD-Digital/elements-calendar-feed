@@ -60,7 +60,7 @@ const Breakpoints = {
 };
 const ELEMENT_NAME = 'umd-calendar-feed';
 const template = document.createElement('template');
-const CALENDAR_PRODUCTION_URL = 'https://calendar.umd-staging.com/';
+const CALENDAR_PRODUCTION_URL = 'https://calendar.umd.edu/';
 const CONTAINER_CLASS = 'umd-calendar-feed-container';
 const LOADER_CLASS = 'umd-calendar-loader';
 const NO_RESULTS_CLASS = 'umd-calendar-no-results';
@@ -193,10 +193,37 @@ template.innerHTML = `
      }
 
      @media (min-width: ${Breakpoints.tabletMin}px) {
+      [${DATA_CONTAINER_AMOUNT}="1"] .${EVENT_CONTAINER_CLASS} {
+        display: flex;
+      }
+    }
+
+
+    @media (min-width: ${Breakpoints.tabletMin}px) {
+      [${DATA_CONTAINER_AMOUNT}="1"] .${EVENT_IMAGE_CONTAINER_CLASS} {
+        width: 40%;
+      }
+    }
+
+    @media (min-width: ${Breakpoints.tabletMin}px) {
+      [${DATA_CONTAINER_AMOUNT}="1"] .${EVENT_TEXT_CONTAINER_CLASS}  {
+        margin-left: 20px;
+      }
+    }
+
+    [${DATA_CONTAINER_AMOUNT}="1"] .${EVENT_CTA_CLASS} {
+      position: relative;
+      bottom: 0;
+      left: 0;
+      margin-top: 20px;
+      display: inline-block;
+    }
+
+    @media (min-width: ${Breakpoints.tabletMin}px) {
        [${DATA_CONTAINER_AMOUNT}="2"] {
          grid-template-columns: 1fr 1fr;
        }
-     }
+    }
 
     @media (min-width: ${Breakpoints.tabletMin}px) {
       [${DATA_CONTAINER_AMOUNT}="3"] {
