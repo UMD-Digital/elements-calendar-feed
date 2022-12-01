@@ -92,15 +92,46 @@ const template = document.createElement('template');
 const CALENDAR_PRODUCTION_URL = 'https://calendar.umd-staging.com/';
 
 const CONTAINER_CLASS = 'umd-calendar-feed-container';
+const LOADER_CLASS = 'umd-calendar-loader';
+const NO_RESULTS_CLASS = 'umd-calendar-no-results';
+const CONTAINER_CONTENT_CLASS = 'umd-calendar-feed-content-container';
 const EVENT_CONTAINER_CLASS = 'umd-calendar-feed-event-container';
 const EVENT_IMAGE_CONTAINER_CLASS = 'umd-calendar-feed-event-image-container';
 const EVENT_TEXT_CONTAINER_CLASS = 'umd-calendar-feed-event-text-container';
 const EVENT_TEXT_DATE_CLASS = 'umd-calendar-feed-event-text-date';
 const EVENT_TEXT_TITLE_CLASS = 'umd-calendar-feed-event-text-title';
+const EVENT_CTA_CLASS = 'umd-calendar-feed-event-cta';
 const DATA_CONTAINER_AMOUNT = 'data-event-amount';
 
 template.innerHTML = `
   <style>
+
+    @keyframes loader-first-animation {
+      0% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes loader-last-animation {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(0);
+      }
+    }
+    
+    @keyframes loader-middle-animation {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(24px, 0);
+      }
+    }
 
     :host {
       position: relative !important;
@@ -112,20 +143,76 @@ template.innerHTML = `
       box-sizing: border-box;
       padding: 0;
       margin: 0;
+      font-family: 'Source Sans Pro', Helvetica, Arial, Verdana, sans-serif;
     }
 
     :host img {
       max-width: 100% !important;
     }
 
-    .${CONTAINER_CLASS} {
+    .${LOADER_CLASS} {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 0;
+      min-height: 40px;
+      position: relative;
+    }
+
+    .${LOADER_CLASS} > div {
+      position: relative;
+    }
+
+    .${LOADER_CLASS} > div > div {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: ${Colors.grayDark};
+      animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+
+    .${LOADER_CLASS} > div > div:nth-child(1) {
+      left: 5px;
+      animation: loader-first-animation 0.6s infinite;
+    }
+
+    .${LOADER_CLASS} > div > div:nth-child(2) {
+      left: 5px;
+      animation: loader-middle-animation 0.6s infinite;
+    }
+
+    .${LOADER_CLASS} > div > div:nth-child(3) {
+      left: 24px;
+      animation: loader-middle-animation 0.6s infinite;
+    }
+
+    .${LOADER_CLASS} > div > div:nth-child(4) {
+      left: 45px;
+      animation: loader-last-animation 0.6s infinite;
+    }
+
+    .${NO_RESULTS_CLASS} {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .${NO_RESULTS_CLASS} p {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .${CONTAINER_CONTENT_CLASS} {
        display: grid;
        grid-template-columns: 1fr;
        grid-gap: 40px 0;
      }
 
      @media (min-width: ${Breakpoints.tabletMin}px) {
-       .${CONTAINER_CLASS} {
+       .${CONTAINER_CONTENT_CLASS} {
          grid-gap: 0 30px;
        }
      }
@@ -154,6 +241,7 @@ template.innerHTML = `
 
     .${EVENT_CONTAINER_CLASS} {
       border: 1px solid ${Colors.grayLight};
+      position: relative;
     }
 
     .${EVENT_IMAGE_CONTAINER_CLASS} {
@@ -169,7 +257,6 @@ template.innerHTML = `
     .${EVENT_IMAGE_CONTAINER_CLASS} > a:hover img,
     .${EVENT_IMAGE_CONTAINER_CLASS} > a:focus img {
       scale: 1.05;
-
     }
 
     .${EVENT_IMAGE_CONTAINER_CLASS} img {
@@ -184,6 +271,7 @@ template.innerHTML = `
     .${EVENT_TEXT_CONTAINER_CLASS} {
       border-top: 1px solid ${Colors.grayLight};
       padding: 30px 20px;
+      padding-bottom: 60px;
     }
 
     .${EVENT_TEXT_CONTAINER_CLASS} p {
@@ -191,7 +279,7 @@ template.innerHTML = `
       font-size: 16px;
     }
 
-    p.${EVENT_TEXT_TITLE_CLASS} {
+    .${EVENT_TEXT_TITLE_CLASS} {
       font-size: 20px;
       line-height: 1.2em;
       font-weight: 700;
@@ -215,16 +303,93 @@ template.innerHTML = `
       font-weight: 600;
     }
 
-    .${EVENT_TEXT_DATE_CLASS} > div:first-child {
-      margin-bottom: 5px;
+    .${EVENT_TEXT_DATE_CLASS} {
+      display: flex;
+    }
+
+    .${EVENT_TEXT_DATE_CLASS} > div {
+      background-color: ${Colors.grayLight};
+      padding: 4px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .${EVENT_TEXT_DATE_CLASS} > div:nth-child(2) {
+      margin-left: 10px;
+    }
+
+    .${EVENT_TEXT_DATE_CLASS} > div * {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .${EVENT_TEXT_DATE_CLASS} > div > span {
+     border-left: 1px solid ${Colors.grayDark};
+     padding-left: 6px;
+     margin-left: 4px;
+     display: inline-block;
+    }
+
+    .${EVENT_CTA_CLASS} {
+      display: inline-block;
+      color: ${Colors.red};
+      transition: color 0.3s ease-in-out;
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+    }
+
+    .${EVENT_CTA_CLASS}:hover,
+    .${EVENT_CTA_CLASS}:focus {
+      color: ${Colors.redDark};
     }
   
   </style>
 `;
 
-const MakeContainer = ({ eventAmount }: { eventAmount: number }) => {
+const MakeContainer = () => {
   const container = document.createElement('div');
+
   container.classList.add(CONTAINER_CLASS);
+
+  return container;
+};
+
+const MakeLoader = () => {
+  const container = document.createElement('div');
+  const wrapper = document.createElement('div');
+  const first = document.createElement('div');
+  const middle = document.createElement('div');
+  const last = document.createElement('div');
+
+  container.classList.add(LOADER_CLASS);
+
+  wrapper.appendChild(first);
+  wrapper.appendChild(middle);
+  wrapper.appendChild(last);
+
+  container.appendChild(wrapper);
+
+  return container;
+};
+
+const MakeNoResults = () => {
+  const container = document.createElement('div');
+  const text = document.createElement('p');
+
+  container.classList.add(NO_RESULTS_CLASS);
+  text.innerHTML = 'There are no events at this time.';
+
+  container.appendChild(text);
+
+  return container;
+};
+
+const MakeContentContainer = ({ eventAmount }: { eventAmount: number }) => {
+  const container = document.createElement('div');
+
+  container.classList.add(CONTAINER_CONTENT_CLASS);
   container.setAttribute(DATA_CONTAINER_AMOUNT, eventAmount.toString());
 
   return container;
@@ -264,6 +429,7 @@ const MakeDate = (event: EventType) => {
   const startDate = new Date(event.startDate);
   const endDate = new Date(event.endDate);
   const isSameDay = startDate.getDay() === endDate.getDay();
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   dateWrapper.classList.add(EVENT_TEXT_DATE_CLASS);
 
@@ -273,8 +439,12 @@ const MakeDate = (event: EventType) => {
   startTime.setAttribute('datetime', startDate.toUTCString());
   endTime.setAttribute('datetime', endDate.toUTCString());
 
-  startDay.innerHTML = `${startDate.toDateString()}`;
-  endDay.innerHTML = `${endDate.toDateString()}`;
+  startDay.innerHTML = `${
+    days[startDate.getDay()]
+  } ${startDate.getMonth()}/${startDate.getDate()}`;
+  endDay.innerHTML = `${
+    days[endDate.getDay()]
+  } ${endDate.getMonth()}/${endDate.getDate()}`;
 
   startTime.innerHTML = `${startDate.toLocaleTimeString('en-US', {
     hour: 'numeric',
@@ -287,17 +457,14 @@ const MakeDate = (event: EventType) => {
   })}`;
 
   if (isSameDay) {
-    firstRow.innerHTML = `${startDay.innerHTML}`;
-    secondRow.innerHTML = `${startTime.outerHTML} - ${endTime.outerHTML}`;
+    firstRow.innerHTML = `${startDay.innerHTML} <span>${startTime.outerHTML} - ${endTime.outerHTML}</span>`;
+    dateWrapper.appendChild(firstRow);
   } else {
-    firstRow.innerHTML = `${startDay.innerHTML} ${startTime.outerHTML}`;
-    secondRow.innerHTML = `${endDay.innerHTML} ${endTime.outerHTML}`;
+    firstRow.innerHTML = `${startDay.innerHTML} <span>${startTime.outerHTML}</span>`;
+    secondRow.innerHTML = `${endDay.innerHTML} <span>${endTime.outerHTML}</span>`;
+    dateWrapper.appendChild(firstRow);
+    dateWrapper.appendChild(secondRow);
   }
-
-  // Time Row
-
-  dateWrapper.appendChild(firstRow);
-  dateWrapper.appendChild(secondRow);
 
   return dateWrapper;
 };
@@ -305,8 +472,9 @@ const MakeDate = (event: EventType) => {
 const MakeTextContainer = (event: EventType) => {
   const parser = new DOMParser();
   const textContainer = document.createElement('div');
-  const eventTitle = document.createElement('p');
+  const eventTitle = document.createElement('h2');
   const link = document.createElement('a');
+  const cta = document.createElement('a');
   const summaryText = parser.parseFromString(event.summary, 'text/html');
   const date = MakeDate(event);
 
@@ -318,10 +486,18 @@ const MakeTextContainer = (event: EventType) => {
   link.setAttribute('target', '_blank');
   link.textContent = event.title;
 
+  cta.classList.add(EVENT_CTA_CLASS);
+  cta.setAttribute('href', event.url);
+  cta.setAttribute('rel', 'noopener noreferrer');
+  cta.setAttribute('target', '_blank');
+  cta.setAttribute('aria-label', `View full event details for ${event.title}`);
+  cta.innerHTML = 'Learn More';
+
   eventTitle.appendChild(link);
-  textContainer.appendChild(eventTitle);
   textContainer.appendChild(date);
-  textContainer.appendChild(summaryText.body);
+  textContainer.appendChild(eventTitle);
+  if (event.summary) textContainer.appendChild(summaryText.body);
+  textContainer.appendChild(cta);
 
   return textContainer;
 };
@@ -424,19 +600,35 @@ export default class CalendarFeedElement extends HTMLElement {
         variables.related = [this._categories];
       }
 
+      const container = MakeContainer();
+      const loader = MakeLoader();
+
+      container.appendChild(loader);
+      this._shadow.appendChild(container);
+
       const data = await fetchEntries({
         variables: variables,
         token: this._token as string,
       });
 
-      const container = MakeContainer({ eventAmount: data.length });
+      loader.remove();
 
-      data.forEach((event: EventType) => {
-        const eventElement = MakeEvent(event);
-        container.appendChild(eventElement);
-      });
+      if (data.length === 0) {
+        const contentContainer = MakeNoResults();
+        container.appendChild(contentContainer);
+        console.log('Calendar Feed Element: No Future Events Found');
+      } else {
+        const contentContainer = MakeContentContainer({
+          eventAmount: data.length,
+        });
 
-      this._shadow.appendChild(container);
+        data.forEach((event: EventType) => {
+          const eventElement = MakeEvent(event);
+          contentContainer.appendChild(eventElement);
+        });
+
+        container.appendChild(contentContainer);
+      }
     };
 
     addEvents();
