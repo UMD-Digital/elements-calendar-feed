@@ -4,7 +4,7 @@ const EventsQuery = `
       events(
         limit: 3
         loadOccurrences: true,
-        rangeStart: "today", 
+        rangeStart: "today",
         relatedTo: $related
       ) {
         id
@@ -83,7 +83,7 @@ template.innerHTML = `
         transform: scale(1);
       }
     }
-    
+
     @keyframes loader-last-animation {
       0% {
         transform: scale(1);
@@ -92,7 +92,7 @@ template.innerHTML = `
         transform: scale(0);
       }
     }
-    
+
     @keyframes loader-middle-animation {
       0% {
         transform: translate(0, 0);
@@ -198,7 +198,6 @@ template.innerHTML = `
       }
     }
 
-
     @media (min-width: ${Breakpoints.tabletMin}px) {
       [${DATA_CONTAINER_AMOUNT}="1"] .${EVENT_IMAGE_CONTAINER_CLASS} {
         width: 40%;
@@ -232,7 +231,7 @@ template.innerHTML = `
     }
 
     [${DATA_CONTAINER_AMOUNT}="3"] > div {
-     
+
     }
 
     .${EVENT_CONTAINER_CLASS} {
@@ -340,7 +339,7 @@ template.innerHTML = `
     .${EVENT_CTA_CLASS}:focus {
       color: ${Colors.redDark};
     }
-  
+
   </style>
 `;
 const MakeContainer = () => {
@@ -511,7 +510,7 @@ export default class CalendarFeedElement extends HTMLElement {
             this._token = newValue;
         }
         if (name === 'categories' && newValue) {
-            this._categories = newValue;
+            this._categories = newValue.split(',');
         }
     }
     connectedCallback() {
@@ -525,7 +524,7 @@ export default class CalendarFeedElement extends HTMLElement {
         const addEvents = async () => {
             const variables = {};
             if (this._categories) {
-                variables.related = [this._categories];
+                variables.related = this._categories;
             }
             const container = MakeContainer();
             const loader = MakeLoader();
