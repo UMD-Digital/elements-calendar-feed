@@ -26,12 +26,22 @@
       padding: 10vw;
     }
 
+    umd-calendar-feed:define {
+      display: block;
+      margin-bottom: 20px;
+    }
+
     p {
       margin-bottom: 20px;
     }
 
     p:last-child {
       margin-bottom: 0;
+    }
+
+    .example-info {
+      display: block;
+      margin: 20px 0;
     }
 
     ul {
@@ -50,6 +60,17 @@
   <!-- Clarice = 92357, Health and wellness = 10404, atlantic building = 92335 -->
   <body>
     <main>
+      <p class="example-info">
+        Only show events related to <strong>Health and Wellness</strong>.
+      </p>
+      <umd-calendar-feed
+        token="ty5hts_R6EWaNT8zBYqVT8edynE0f9cK"
+        categories="10404"
+      ></umd-calendar-feed>
+
+      <p class="example-info">
+        Only show events that occur at the <strong>Atlantic Building</strong>.
+      </p>
       <umd-calendar-feed
         token="ty5hts_R6EWaNT8zBYqVT8edynE0f9cK"
         categories="92335"
