@@ -406,7 +406,7 @@ const MakeDate = (event) => {
     endDate.setTime(endDate.getTime() + 4 * 60 * 60 * 1000);
     startTime.setAttribute('datetime', startDate.toUTCString());
     endTime.setAttribute('datetime', endDate.toUTCString());
-    startDay.innerHTML = `${days[startDate.getDay()]} ${startDate.getMonth()}/${startDate.getDate()}`;
+    startDay.innerHTML = `${days[startDate.getDay()]} ${startDate.getMonth() + 1}/${startDate.getDate()}`;
     endDay.innerHTML = `${days[endDate.getDay()]} ${endDate.getMonth()}/${endDate.getDate()}`;
     startTime.innerHTML = `${startDate.toLocaleTimeString('en-US', {
         hour: 'numeric',

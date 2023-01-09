@@ -465,9 +465,9 @@ const MakeDate = (event: EventType) => {
   startTime.setAttribute('datetime', startDate.toUTCString());
   endTime.setAttribute('datetime', endDate.toUTCString());
 
-  startDay.innerHTML = `${
-    days[startDate.getDay()]
-  } ${startDate.getMonth()}/${startDate.getDate()}`;
+  startDay.innerHTML = `${days[startDate.getDay()]} ${
+    startDate.getMonth() + 1
+  }/${startDate.getDate()}`;
   endDay.innerHTML = `${
     days[endDate.getDay()]
   } ${endDate.getMonth()}/${endDate.getDate()}`;
