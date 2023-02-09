@@ -468,9 +468,9 @@ const MakeDate = (event: EventType) => {
   startDay.innerHTML = `${days[startDate.getDay()]} ${
     startDate.getMonth() + 1
   }/${startDate.getDate()}`;
-  endDay.innerHTML = `${
-    days[endDate.getDay()]
-  } ${endDate.getMonth()}/${endDate.getDate()}`;
+  endDay.innerHTML = `${days[endDate.getDay()]} ${
+    endDate.getMonth() + 1
+  }/${endDate.getDate()}`;
 
   startTime.innerHTML = `${startDate.toLocaleTimeString('en-US', {
     hour: 'numeric',
