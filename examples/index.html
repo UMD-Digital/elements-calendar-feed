@@ -55,9 +55,13 @@
     li:last-child {
       margin-bottom: 0;
     }
+
+    umd-calendar-feed .umd-calendar-feed-event-image-container img {
+      object-fit: contain;
+    }
   </style>
 
-  <!-- Clarice = 92357, Health and wellness = 10404, atlantic building = 92335 -->
+  <!-- Clarice = 92357, Health and wellness = 10404, atlantic building = 92335, research = 10398 -->
   <body>
     <main>
       <p class="example-info">Show all events</p>
@@ -71,6 +75,14 @@
       <umd-calendar-feed
         token="ty5hts_R6EWaNT8zBYqVT8edynE0f9cK"
         categories="10404"
+      ></umd-calendar-feed>
+
+      <p class="example-info">
+        Only show events related to <strong>Research</strong>.
+      </p>
+      <umd-calendar-feed
+        token="ty5hts_R6EWaNT8zBYqVT8edynE0f9cK"
+        categories="10398"
       ></umd-calendar-feed>
 
       <p class="example-info">

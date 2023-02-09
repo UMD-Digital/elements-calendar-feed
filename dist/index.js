@@ -298,10 +298,6 @@ template.innerHTML = `
       font-weight: 600;
     }
 
-    .${EVENT_TEXT_DATE_CLASS} {
-      display: flex;
-    }
-
     .${EVENT_TEXT_DATE_CLASS} > div {
       background-color: ${Colors.grayLight};
       padding: 4px 8px;
@@ -311,7 +307,7 @@ template.innerHTML = `
     }
 
     .${EVENT_TEXT_DATE_CLASS} > div:nth-child(2) {
-      margin-left: 10px;
+      margin-top: 10px;
     }
 
     .${EVENT_TEXT_DATE_CLASS} > div * {
@@ -384,7 +380,6 @@ const MakeImageContainer = (event) => {
     link.setAttribute('target', '_blank');
     image.setAttribute('src', `${CALENDAR_PRODUCTION_URL}${event.image[0].url}`);
     image.setAttribute('alt', event.image[0].altText);
-    console.log(event);
     link.appendChild(image);
     imageContainer.appendChild(link);
     return imageContainer;
@@ -407,7 +402,7 @@ const MakeDate = (event) => {
     startTime.setAttribute('datetime', startDate.toUTCString());
     endTime.setAttribute('datetime', endDate.toUTCString());
     startDay.innerHTML = `${days[startDate.getDay()]} ${startDate.getMonth() + 1}/${startDate.getDate()}`;
-    endDay.innerHTML = `${days[endDate.getDay()]} ${endDate.getMonth()}/${endDate.getDate()}`;
+    endDay.innerHTML = `${days[endDate.getDay()]} ${endDate.getMonth() + 1}/${endDate.getDate()}`;
     startTime.innerHTML = `${startDate.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
@@ -421,8 +416,8 @@ const MakeDate = (event) => {
         dateWrapper.appendChild(firstRow);
     }
     else {
-        firstRow.innerHTML = `${startDay.innerHTML} <span>${startTime.outerHTML}</span>`;
-        secondRow.innerHTML = `${endDay.innerHTML} <span>${endTime.outerHTML}</span>`;
+        firstRow.innerHTML = `Start Date: ${startDay.innerHTML} <span>${startTime.outerHTML}</span>`;
+        secondRow.innerHTML = `End Date: ${endDay.innerHTML} <span>${endTime.outerHTML}</span>`;
         dateWrapper.appendChild(firstRow);
         dateWrapper.appendChild(secondRow);
     }
