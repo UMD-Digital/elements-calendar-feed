@@ -427,7 +427,7 @@ const MakeImageContainer = (event: EventType) => {
   link.setAttribute('rel', 'noopener noreferrer');
   link.setAttribute('target', '_blank');
 
-  image.setAttribute('src', `${CALENDAR_PRODUCTION_URL}${event.image[0].url}`);
+  image.setAttribute('src', `${event.image[0].url}`);
   image.setAttribute('alt', event.image[0].altText);
 
   link.appendChild(image);
@@ -542,7 +542,7 @@ const fetchEntries = async ({
   variables: VariablesType;
   token: string;
 }) => {
-  const response = await fetch(`${CALENDAR_PRODUCTION_URL}/graphql`, {
+  const response = await fetch(`${CALENDAR_PRODUCTION_URL}graphql`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
